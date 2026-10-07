@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kinetic Age — Renewal Performance</title>
+<style>
+:root{
+  --sidebar:#12141c; --sidebar-hover:#1c1f2b; --sidebar-text:#9aa0b4;
+  --content-bg:#f5f6fa; --card:#ffffff; --border:#e7e9f2;
+  --ink:#161826; --sub:#6b7086;
+  --blue:#3b5bfd; --blue-tint:#eef1ff;
+  --purple:#7c5cff; --purple-tint:#f2eeff;
+  --green:#16a34a; --green-tint:#e8f8ee;
+  --orange:#f59e0b; --orange-tint:#fef3e2;
+  --red:#ef4444; --red-tint:#fdeceb;
+  --amber:#eab308; --amber-tint:#fef9e0;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;background:var(--content-bg);color:var(--ink);}
+a{text-decoration:none;color:inherit;}
+.app{display:flex;min-height:100vh;}
+
+/* Sidebar */
+.sidebar{width:224px;flex:0 0 224px;background:var(--sidebar);padding:18px 12px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.brand{display:flex;align-items:center;gap:9px;padding:6px 10px 20px;}
+.brand-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--purple));flex:0 0 auto;}
+.brand-name{color:#fff;font-weight:700;font-size:14.5px;letter-spacing:.2px;}
+.nav-group{margin-bottom:4px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;color:var(--sidebar-text);font-size:13.2px;margin-bottom:1px;cursor:default;}
+.nav-item .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.55;flex:0 0 auto;}
+.nav-item.active{background:var(--blue-tint);color:#20233a;font-weight:600;}
+.nav-item.active .dot{display:none;}
+.nav-item.active .nicon{opacity:1;color:var(--blue);}
+.nav-item:not(.active):hover{background:var(--sidebar-hover);color:#d7dae6;}
+.nicon{width:16px;height:16px;flex:0 0 auto;color:var(--sidebar-text);opacity:.8;}
+
+/* Main */
+.main{flex:1;min-width:0;padding:26px 30px 60px;}
+.topbar{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-bottom:22px;}
+.user-chip{display:flex;align-items:center;gap:9px;}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:12.5px;display:flex;align-items:center;justify-content:center;}
+.user-name{font-size:13px;font-weight:600;line-height:1.2;}
+.user-role{font-size:11.5px;color:var(--sub);}
+
+.pagehead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:20px;flex-wrap:wrap;}
+h1{font-size:25px;margin:0 0 4px;letter-spacing:-.2px;}
+.pagehead p{margin:0;color:var(--sub);font-size:13.6px;max-width:520px;}
+.date-pill{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;}
+
+.date-wrap{position:relative;}
+button.date-pill{font-family:inherit;cursor:pointer;}
+button.date-pill:hover{border-color:var(--blue);}
+.date-pop{display:none;position:absolute;right:0;top:calc(100% + 8px);z-index:30;background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:0 12px 32px rgba(20,22,38,.16);min-width:260px;flex-direction:column;gap:10px;}
+.date-pop.open{display:flex;}
+.pop-l{display:flex;flex-direction:column;gap:5px;font-size:11.8px;color:var(--sub);font-weight:600;}
+.date-pop select,.date-pop input[type=date]{border:1px solid var(--border);background:#fff;border-radius:9px;padding:8px 11px;font-size:12.8px;color:var(--ink);font-family:inherit;}
+.pop-done{background:var(--blue);color:#fff;border:none;border-radius:9px;padding:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.tabs{display:flex;gap:22px;border-bottom:1px solid var(--border);margin-bottom:20px;}
+.tab{padding:9px 2px 12px;font-size:14px;font-weight:600;color:var(--sub);border-bottom:2px solid transparent;cursor:pointer;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;}
+.tab.active{color:var(--ink);border-bottom-color:var(--blue);}
+
+/* KPI cards */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 18px 16px;}
+.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.kpi-label{font-size:12.8px;color:var(--sub);font-weight:500;}
+.kpi-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+.kpi-icon svg{width:17px;height:17px;}
+.kpi-val{font-size:26px;font-weight:700;letter-spacing:-.3px;}
+.kpi-note{font-size:11.5px;color:var(--sub);margin-top:5px;}
+
+/* Filters */
+.filters{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:16px;}
+.filters select, .filters input[type=text], .filters input[type=date]{border:1px solid var(--border);background:#fff;border-radius:9px;padding:8px 11px;font-size:12.8px;color:var(--ink);font-family:inherit;}
+.filters input[type=text]{min-width:190px;}
+.chip-group{display:flex;gap:6px;margin-left:2px;}
+.chip{border:1px solid var(--border);background:#fff;border-radius:999px;padding:7px 13px;font-size:12.3px;font-weight:600;cursor:pointer;color:var(--sub);display:flex;align-items:center;gap:6px;}
+.chip .sw{width:8px;height:8px;border-radius:50%;}
+.chip[data-k=high].on, .chip[data-k=hot].on{background:var(--green-tint);border-color:#8fd6a8;color:#116b34;}
+.chip[data-k=medium].on, .chip[data-k=warm].on{background:var(--amber-tint);border-color:#e9cf67;color:#8a6a00;}
+.chip[data-k=low].on, .chip[data-k=cold].on{background:var(--red-tint);border-color:#f5b5b0;color:#a11a1a;}
+
+.section-head{margin:26px 0 12px;}
+.section-head h2{font-size:15.5px;margin:0 0 3px;}
+.section-head p{margin:0;font-size:12.6px;color:var(--sub);}
+
+/* Table */
+.table-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow-x:auto;overflow-y:hidden;max-width:100%;-webkit-overflow-scrolling:touch;}
+.table-card table{min-width:max-content;}
+.table-card th:first-child,.table-card td:first-child{position:sticky;left:0;background:var(--card);z-index:1;box-shadow:1px 0 0 var(--border);}
+table{width:100%;border-collapse:collapse;font-size:12.8px;}
+thead th{text-align:left;padding:13px 16px;color:var(--sub);font-weight:600;font-size:11.8px;text-transform:none;border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody td{padding:13px 16px;border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody tr:last-child td{border-bottom:none;}
+.cname{font-weight:600;}
+.csub{font-size:11.3px;color:var(--sub);font-weight:400;}
+.num{color:var(--blue);font-weight:600;}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700;}
+.badge.high, .badge.hot{background:var(--green-tint);color:#116b34;}
+.badge.medium, .badge.warm{background:var(--amber-tint);color:#8a6a00;}
+.badge.low, .badge.cold{background:var(--red-tint);color:#a11a1a;}
+.pay{display:inline-flex;padding:4px 10px;border-radius:999px;font-size:11.3px;font-weight:600;}
+.pay.paid{background:var(--green-tint);color:#116b34;}
+.pay.partial{background:var(--amber-tint);color:#8a6a00;}
+.pay.pending{background:var(--red-tint);color:#a11a1a;}
+.empty-row td{text-align:center;color:var(--sub);padding:26px;}
+.remarks{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--sub);}
+.remarks:empty::after{content:"—";}
+
+.sel{border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;background:#fff;color:var(--ink);}
+.flag-pending{background:var(--red-tint);color:#a11a1a;border-color:#f5b5b0;}
+.flag-renewal{background:var(--blue-tint);color:#2440c8;border-color:#b9c4ff;}
+.audit-pending{background:var(--amber-tint);color:#8a6a00;border-color:#e9cf67;}
+.audit-done{background:var(--green-tint);color:#116b34;border-color:#8fd6a8;}
+.audit-lost{background:var(--red-tint);color:#a11a1a;border-color:#f5b5b0;}
+.audit-pause{background:#eef0f5;color:#4a4f66;border-color:#d4d8e6;}
+.tag{display:inline-flex;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:600;border:1px solid transparent;}
+.prog{display:inline-block;width:44px;height:5px;background:#e9ebf3;border-radius:3px;margin-left:8px;vertical-align:middle;overflow:hidden;}
+.prog i{display:block;height:100%;background:var(--blue);}
+.hint{display:flex;align-items:center;gap:7px;font-size:11.8px;color:var(--sub);margin:12px 2px 0;}
+.hint svg{width:13px;height:13px;flex:0 0 auto;}
+
+@media (max-width:980px){ .kpis{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:640px){
+  .sidebar{display:none;}
+  .kpis{grid-template-columns:1fr;}
+  table{font-size:12px;}
+}
+:root:not([data-theme="light"]) {}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark"></div><div class="brand-name">Kinetic Age</div></div>
+    <div class="nav-group" id="navList"></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="user-chip">
+        <div class="avatar">MS</div>
+        <div><div class="user-name">Mayank Mrigank Singh</div><div class="user-role">Admin</div></div>
+      </div>
+    </div>
+
+    <div class="pagehead">
+      <div>
+        <h1>Renewal Performance</h1>
+      </div>
+      <div class="date-wrap">
+        <button class="date-pill" id="rangeLabel" type="button" aria-haspopup="true"></button>
+        <div class="date-pop" id="datePop">
+          <label class="pop-l">Quick range
+            <select id="fPreset">
+              <option value="30">Last 30 days</option>
+              <option value="7">Last 7 days</option>
+              <option value="month">This month</option>
+              <option value="custom">Custom range</option>
+            </select>
+          </label>
+          <label class="pop-l">From <input type="date" id="fFrom"></label>
+          <label class="pop-l">To <input type="date" id="fTo"></label>
+          <button type="button" class="pop-done" id="popDone">Apply</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="clientwise">Client-wise</button>
+      <button class="tab" data-tab="physiowise">Physio-wise</button>
+    </div>
+
+    <!-- KPI cards -->
+    <div class="kpis" id="kpiGrid"></div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <select id="fRM"><option value="">RM: All</option></select>
+      <select id="fPT"><option value="">PT: All</option></select>
+      <input type="text" id="fName" placeholder="Search client name…">
+      <div class="chip-group">
+        <button class="chip on" data-k="high"><span class="sw" style="background:var(--green)"></span>High</button>
+        <button class="chip on" data-k="medium"><span class="sw" style="background:var(--amber)"></span>Medium</button>
+        <button class="chip on" data-k="low"><span class="sw" style="background:var(--red)"></span>Low</button>
+      </div>
+    </div>
+
+    <div id="overviewPane">
+      <div class="section-head">
+        <h2>Recently renewed</h2>
+      </div>
+      <div class="table-card"><table>
+        <thead><tr><th>Client</th><th>RM</th><th>PT</th><th>Renewed on</th><th>Likelihood</th><th>Collectible</th><th>Collected</th><th>Pending</th><th>Paid Status</th><th>Remarks</th></tr></thead>
+        <tbody id="overviewBody"></tbody>
+      </table></div>
+    </div>
+
+    <div id="clientwisePane" style="display:none;">
+      <div class="section-head">
+        <h2>Client-wise renewal audit</h2>
+      </div>
+      <div class="table-card"><table>
+        <thead><tr><th>Client</th><th>RM</th><th>PT</th><th>Renewed on</th><th>Sessions completed</th><th>Last session done on</th><th>CSAT</th><th>Goal achieved</th><th>Sessions rescheduled</th><th>Likelihood</th><th>Collectible</th><th>Collected</th><th>Pending</th><th>Paid Status</th><th>Payment flag</th><th>Audit status</th><th>Assessment &amp; progress report</th><th>Medical reports</th><th>Doctor consultation</th><th>Doctor consultation date</th><th>Lab test</th><th>Report shared</th><th>Treatment plan</th><th>Remarks</th></tr></thead>
+        <tbody id="clientwiseBody"></tbody>
+      </table></div>
+    </div>
+
+    <div id="physiowisePane" style="display:none;">
+      <div class="section-head">
+        <h2>Physio-wise renewal performance</h2>
+      </div>
+      <div class="table-card"><table>
+        <thead><tr><th>Physio (PT)</th><th>Renewed</th><th>Missed</th><th>Avg CSAT</th><th>Goals achieved</th><th>Avg rescheduled</th><th>Avg late arrival</th><th>SOP violations (system)</th><th>Disputes raised</th><th>Disputes accepted</th><th>Disputes rejected</th><th>Leaves taken</th><th>Collectible</th><th>Collected</th><th>Pending</th><th>Incentives</th></tr></thead>
+        <tbody id="physiowiseBody"></tbody>
+      </table></div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const rupee = n => '₹' + n.toLocaleString('en-IN');
+
+const NAV = [
+ ['Dashboard',0],['Analytics',0],['Clients',0],['Tasks Board',0],['Trainers',0],['Nutrition',0],
+ ['Sessions',0],['Pending Exercise Plans',0],['Leaves',0],['Reports',0],['Trials',0],
+ ['Trainer Deductions',0],['Sales Performance',0],['Renewal',1],['Sales MIS',0],
+ ['Referrals',0],['Audits',0],['CSAT',0],['CRM',0],['Call Analysis',0]
+];
+document.getElementById('navList').innerHTML = NAV.map(([label,active])=>`
+  <div class="nav-item${active?' active':''}">
+    ${active?`<svg class="nicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>`
+    :`<span class="dot"></span>`}
+    <span>${label}</span>
+  </div>`).join('');
+
+function icon(name){
+  const P = {
+    refresh:'<polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>',
+    calendar:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+    x:'<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+    wallet:'<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>',
+    check:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+    clock:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'
+  };
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[name]}</svg>`;
+}
+
+const KPIS = [
+ ['Total Renewals Done','218','refresh',['var(--purple)','var(--purple-tint)'],'All-time, across all PTs'],
+ ['Renewals This Month','34','calendar',['var(--blue)','var(--blue-tint)'],'Sep 1 – Sep 27, 2026'],
+ ['Missed Renewals','12','x',['var(--red)','var(--red-tint)'],'Lapsed without renewal'],
+ ['Total Collectible','₹42,18,500','wallet',['var(--orange)','var(--orange-tint)'],'From clients due for renewal'],
+ ['Total Collected','₹35,72,900','check',['var(--green)','var(--green-tint)'],'85% of collectible'],
+ ['Pending Amount','₹6,45,600','clock',['var(--amber)','var(--amber-tint)'],'Follow-up required'],
+];
+function drawKPIs(KPIS){document.getElementById('kpiGrid').innerHTML = KPIS.map(([label,val,ic,[c,tint],note])=>`
+  <div class="kpi">
+    <div class="kpi-top">
+      <div class="kpi-label">${label}</div>
+      <div class="kpi-icon" style="background:${tint};color:${c}">${icon(ic)}</div>
+    </div>
+    <div class="kpi-val">${val}</div>
+    <div class="kpi-note">${note}</div>
+  </div>`).join('');}
+
+// Sample renewal data
+const RMS = ['Aruna','Avi Jain','Priyanka Garnaik','Saarthak Shaurya'];
+const PTS = ['Dr. Neha Kapoor','Dr. Rohan Mehta','Dr. Sana Iyer','Dr. Arjun Rao'];
+const SOP = {
+ 'Dr. Neha Kapoor':{v:5,raised:3,acc:2,rej:1,leaves:2},
+ 'Dr. Rohan Mehta':{v:9,raised:6,acc:2,rej:3,leaves:4},
+ 'Dr. Sana Iyer':{v:3,raised:1,acc:1,rej:0,leaves:1},
+ 'Dr. Arjun Rao':{v:7,raised:4,acc:2,rej:1,leaves:3}
+};
+const INCENTIVE = {'Dr. Neha Kapoor':18000,'Dr. Rohan Mehta':6500,'Dr. Sana Iyer':22000,'Dr. Arjun Rao':12500};
+const LATE = {'Dr. Neha Kapoor':4,'Dr. Rohan Mehta':11,'Dr. Sana Iyer':6,'Dr. Arjun Rao':8};
+const MISSED_LOG = {
+ 'Dr. Neha Kapoor':['2026-09-23','2026-09-11','2026-09-02'],
+ 'Dr. Rohan Mehta':['2026-09-24','2026-09-18','2026-09-09','2026-08-31'],
+ 'Dr. Sana Iyer':['2026-09-21','2026-09-06'],
+ 'Dr. Arjun Rao':['2026-09-25','2026-09-14','2026-09-03']
+};
+const CLIENTS = [
+ ['Ritika Sharma','Aruna','Dr. Neha Kapoor','2026-09-26',4.6,95,1,12,60000,60000,'paid','Renewed on call, no follow-up needed',11,'2026-09-26',true,true,'2026-09-02',true,true,true,true],
+ ['Devansh Patel','Avi Jain','Dr. Rohan Mehta','2026-09-25',2.4,40,7,12,45000,15000,'pending','Unhappy with reschedules — escalate to PT lead',5,'2026-09-24',true,false,'',false,false,false,false],
+ ['Kavya Reddy','Priyanka Garnaik','Dr. Sana Iyer','2026-09-24',4.1,85,2,24,72000,72000,'paid','',20,'2026-09-25',true,true,'2026-09-10',true,true,true,true],
+ ['Aditya Verma','Aruna','Dr. Arjun Rao','2026-09-22',3.5,60,3,12,50000,25000,'pending','Balance due end of month, client confirmed',9,'2026-09-21',true,true,'2026-09-12',true,false,true,true],
+ ['Meera Nair','Saarthak Shaurya','Dr. Rohan Mehta','2026-09-20',4.8,100,0,12,40000,40000,'paid','Referral lead — great CSAT',12,'2026-09-20',true,true,'2026-08-30',true,true,true,true],
+ ['Rohan Gupta','Avi Jain','Dr. Neha Kapoor','2026-09-19',2.9,80,2,24,68000,68000,'paid','Low CSAT despite payment — recheck experience',18,'2026-09-18',true,false,'2026-09-05',true,false,true,true],
+ ['Sneha Iyer','Priyanka Garnaik','Dr. Sana Iyer','2026-09-17',3.8,75,7,12,55000,20000,'pending','Payment link sent, awaiting confirmation',6,'2026-09-16',false,false,'',false,false,false,false],
+ ['Karan Malhotra','Aruna','Dr. Arjun Rao','2026-09-15',4.3,65,2,12,42000,42000,'paid','Goal not yet marked complete in system',10,'2026-09-14',true,true,'2026-09-01',true,true,true,true],
+ ['Tanvi Joshi','Saarthak Shaurya','Dr. Neha Kapoor','2026-09-12',4.0,90,3,36,80000,60000,'pending','Partial payment via EMI plan',30,'2026-09-26',true,true,'2026-09-08',true,true,false,true],
+ ['Yash Kulkarni','Avi Jain','Dr. Rohan Mehta','2026-09-10',2.2,25,9,12,38000,0,'pending','High risk — multiple reschedules, call today',3,'2026-09-08',false,false,'',false,false,false,false],
+ ['Priya Menon','Priyanka Garnaik','Dr. Sana Iyer','2026-09-08',4.7,100,0,24,58000,58000,'paid','',24,'2026-09-07',true,true,'2026-08-31',true,true,true,true],
+ ['Vikram Chandra','Aruna','Dr. Arjun Rao','2026-09-05',3.6,70,8,36,64000,44000,'pending','Follow up next week for balance',25,'2026-09-04',true,false,'2026-09-03',true,false,true,true],
+].map((r,i)=>({id:i,name:r[0],rm:r[1],pt:r[2],date:r[3],csat:r[4],goal:r[5],resched:r[6],sessions:r[7],collectible:r[8],collected:r[9],pay:r[10],remarks:r[11],done:r[12],last:r[13],assess:r[14],medical:r[15],consult:r[16],lab:r[17],shared:r[18],plan:r[19],wa:r[20]}));
+
+function likelihood(c){
+  if(c.csat<3) return 'low';
+  const pct = c.resched/c.sessions*100;
+  const g = typeof c.goal === 'number' ? c.goal : (c.goal ? 100 : 0);
+  if(g<70 || pct>50) return 'medium';
+  return 'high';
+}
+const LABEL = {high:'High',medium:'Medium',low:'Low',hot:'High',warm:'Medium',cold:'Low'};
+const fmtDate = d => new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
+
+['fRM','fPT'].forEach((id,i)=>{
+  const list = i===0?RMS:PTS;
+  const sel = document.getElementById(id);
+  list.forEach(v=>sel.insertAdjacentHTML('beforeend',`<option value="${v}">${v}</option>`));
+});
+
+function passesFilters(c){
+  const from = document.getElementById('fFrom').value;
+  const to = document.getElementById('fTo').value;
+  if(from && c.date<from) return false;
+  if(to && c.date>to) return false;
+  const rm = document.getElementById('fRM').value;
+  const pt = document.getElementById('fPT').value;
+  const name = document.getElementById('fName').value.trim().toLowerCase();
+  const activeChips = [...document.querySelectorAll('.chip.on')].map(b=>b.dataset.k);
+  if(rm && c.rm!==rm) return false;
+  if(pt && c.pt!==pt) return false;
+  if(name && !c.name.toLowerCase().includes(name)) return false;
+  if(!activeChips.includes(likelihood(c))) return false;
+  return true;
+}
+
+const REF = '2026-09-27';
+const isoD = d => d.toISOString().slice(0,10);
+function applyPreset(){
+  const p = document.getElementById('fPreset').value;
+  if(p==='custom') return;
+  const end = new Date(REF), start = new Date(REF);
+  if(p==='30') start.setUTCDate(end.getUTCDate()-29);
+  if(p==='7') start.setUTCDate(end.getUTCDate()-6);
+  if(p==='month') start.setUTCDate(1);
+  document.getElementById('fFrom').value = isoD(start);
+  document.getElementById('fTo').value = isoD(end);
+}
+function updateRangeLabel(){
+  const f = v => new Date(v+'T00:00:00Z').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});
+  const a = document.getElementById('fFrom').value, b = document.getElementById('fTo').value;
+  document.getElementById('rangeLabel').innerHTML = '📅&nbsp; ' + (a&&b ? f(a)+' – '+f(b) : a ? 'From '+f(a) : b ? 'Until '+f(b) : 'All dates') + '&nbsp; ▾';
+}
+document.getElementById('fPreset').addEventListener('change',()=>{applyPreset();render();});
+['fFrom','fTo'].forEach(id=>document.getElementById(id).addEventListener('change',()=>{
+  document.getElementById('fPreset').value='custom'; render();
+}));
+applyPreset();
+
+const pop = document.getElementById('datePop');
+document.getElementById('rangeLabel').addEventListener('click',e=>{e.stopPropagation();pop.classList.toggle('open');});
+document.getElementById('popDone').addEventListener('click',()=>pop.classList.remove('open'));
+document.addEventListener('click',e=>{if(!pop.contains(e.target)) pop.classList.remove('open');});
+
+function inRange(d){
+  const a = document.getElementById('fFrom').value, b = document.getElementById('fTo').value;
+  return (!a || d>=a) && (!b || d<=b);
+}
+function computeKPIs(){
+  const cs = CLIENTS.filter(c=>inRange(c.date));
+  const to = document.getElementById('fTo').value || REF, mon = to.slice(0,7);
+  const monthName = new Date(mon+'-01T00:00:00Z').toLocaleDateString('en-US',{month:'long',year:'numeric',timeZone:'UTC'});
+  const inMonth = cs.filter(c=>c.date.slice(0,7)===mon).length;
+  const missed = Object.values(MISSED_LOG).flat().filter(inRange).length;
+  const due = cs.reduce((a,c)=>a+c.collectible,0), got = cs.reduce((a,c)=>a+c.collected,0);
+  const vals = [cs.length, inMonth, missed, rupee(due), rupee(got), rupee(due-got)];
+  const notes = ['In selected date range', monthName, 'Lapsed without renewal', 'From renewed clients',
+    due ? Math.round(got/due*100)+'% of collectible' : 'No renewals in range', 'Follow-up required'];
+  return KPIS.map((k,i)=>[k[0],vals[i],k[2],k[3],notes[i]]);
+}
+
+const FLAG_LABEL={pending:'Pending Payment',renewal:'Renewal'};
+const AUDIT_LABEL={pending:'Pending',done:'Done',lost:'Lost',pause:'Pause'};
+const idleDays=c=>Math.round((new Date(REF)-new Date(c.last))/864e5);
+// Automated: pending amount -> Pending Payment, otherwise Renewal
+const payFlag=c=>c.collectible-c.collected>0?'pending':'renewal';
+// Automated: Lost > Pause > Done > Pending
+function auditStatus(c){
+  const idle=idleDays(c);
+  if(c.collected===0 && idle>14) return 'lost';
+  if(idle>14 && c.done<c.sessions) return 'pause';
+  if(c.assess && c.medical && c.consult && c.lab && c.shared && c.plan) return 'done';
+  return 'pending';
+}
+const tag=(cls,label)=>`<span class="tag ${cls}">${label}</span>`;
+const chk=(v,y,n)=>`<span class="pay ${v?'paid':'partial'}">${v?y:n}</span>`;
+
+function render(){
+  updateRangeLabel();
+  drawKPIs(computeKPIs());
+  const filtered = CLIENTS.filter(passesFilters).sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  const ovBody = document.getElementById('overviewBody');
+  const top = filtered.slice(0,6);
+  ovBody.innerHTML = top.length ? top.map(c=>`
+    <tr>
+      <td class="cname">${c.name}</td>
+      <td>${c.rm}</td>
+      <td>${c.pt}</td>
+      <td>${fmtDate(c.date)}</td>
+      <td><span class="badge ${likelihood(c)}">${LABEL[likelihood(c)]}</span></td>
+      <td class="num">${rupee(c.collectible)}</td>
+      <td class="num">${rupee(c.collected)}</td>
+      <td class="num">${rupee(c.collectible-c.collected)}</td>
+      <td><span class="pay ${c.pay}">${c.pay[0].toUpperCase()+c.pay.slice(1)}</span></td>
+      <td class="remarks" title="${c.remarks}">${c.remarks}</td>
+    </tr>`).join('') : `<tr class="empty-row"><td colspan="15">No renewals match these filters.</td></tr>`;
+
+  const cwBody = document.getElementById('clientwiseBody');
+  cwBody.innerHTML = filtered.length ? filtered.map(c=>`
+    <tr>
+      <td class="cname">${c.name}</td>
+      <td>${c.rm}</td>
+      <td>${c.pt}</td>
+      <td>${fmtDate(c.date)}</td>
+      <td>${c.done}/${c.sessions}<span class="prog"><i style="width:${Math.round(c.done/c.sessions*100)}%"></i></span></td>
+      <td>${fmtDate(c.last)}</td>
+      <td>${c.csat.toFixed(1)}</td>
+      <td>${c.goal}%</td>
+      <td>${c.resched}/${c.sessions} <span class="csub">(${Math.round(c.resched/c.sessions*100)}%)</span></td>
+      <td><span class="badge ${likelihood(c)}">${LABEL[likelihood(c)]}</span></td>
+      <td class="num">${rupee(c.collectible)}</td>
+      <td class="num">${rupee(c.collected)}</td>
+      <td class="num">${rupee(c.collectible-c.collected)}</td>
+      <td><span class="pay ${c.pay}">${c.pay[0].toUpperCase()+c.pay.slice(1)}</span></td>
+      <td>${tag('flag-'+payFlag(c),FLAG_LABEL[payFlag(c)])}</td>
+      <td>${tag('audit-'+auditStatus(c),AUDIT_LABEL[auditStatus(c)])}</td>
+      <td>${chk(c.assess,'Uploaded','Pending')}</td>
+      <td>${chk(c.medical,'Uploaded','Pending')}</td>
+      <td>${chk(!!c.consult,'Done','Pending')}</td>
+      <td>${c.consult?fmtDate(c.consult):'—'}</td>
+      <td>${chk(c.lab,'Done','Pending')}</td>
+      <td>${chk(c.shared,'Shared','Pending')}</td>
+      <td>${chk(c.plan,'Created','Pending')}</td>
+      <td class="remarks" title="${c.remarks}">${c.remarks}</td>
+    </tr>`).join('') : `<tr class="empty-row"><td colspan="24">No renewals match these filters.</td></tr>`;
+
+  // Physio-wise rollup
+  const rows = PTS.map(pt=>{
+    const cs = filtered.filter(c=>c.pt===pt);
+    if(!cs.length) return null;
+    const n = cs.length, sum = f => cs.reduce((a,c)=>a+f(c),0);
+    const collectible = sum(c=>c.collectible), collected = sum(c=>c.collected);
+    const mix = {high:0,medium:0,low:0}; cs.forEach(c=>mix[likelihood(c)]++);
+    const pay = {paid:0,partial:0,pending:0}; cs.forEach(c=>pay[c.pay]++);
+    return {pt,n,missed:MISSED_LOG[pt].filter(inRange).length,csat:sum(c=>c.csat)/n,
+      goal:Math.round(sum(c=>typeof c.goal==='number'?c.goal:(c.goal?100:0))/n),
+      resched:Math.round(sum(c=>c.resched/c.sessions)/n*100),mix,pay,collectible,collected,pending:collectible-collected,
+      pct:collectible?Math.round(collected/collectible*100):0};
+  }).filter(Boolean).sort((a,b)=>b.collected-a.collected);
+  document.getElementById('physiowiseBody').innerHTML = rows.length ? rows.map(r=>`
+    <tr>
+      <td class="cname">${r.pt}</td>
+      <td class="num">${r.n}</td>
+      <td>${r.missed}</td>
+      <td>${r.csat.toFixed(1)}</td>
+      <td>${r.goal}%</td>
+      <td>${r.resched}%</td>
+      <td>${LATE[r.pt]} min</td>
+      <td>${SOP[r.pt].v}</td>
+      <td>${SOP[r.pt].raised}</td>
+      <td><span class="pay paid">${SOP[r.pt].acc}</span></td>
+      <td><span class="pay pending">${SOP[r.pt].rej}</span></td>
+      <td>${SOP[r.pt].leaves}</td>
+      <td class="num">${rupee(r.collectible)}</td>
+      <td class="num">${rupee(r.collected)}</td>
+      <td class="num">${rupee(r.pending)}</td>
+      <td class="num">${rupee(INCENTIVE[r.pt])}</td>
+    </tr>`).join('') : `<tr class="empty-row"><td colspan="16">No renewals match these filters.</td></tr>`;
+}
+
+document.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{b.classList.toggle('on');render();}));
+document.getElementById('fRM').addEventListener('change',render);
+document.getElementById('fPT').addEventListener('change',render);
+document.getElementById('fName').addEventListener('input',render);
+
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  const tab = t.dataset.tab;
+  ['overview','clientwise','physiowise'].forEach(k=>{
+    document.getElementById(k+'Pane').style.display = tab===k?'block':'none';
+  });
+}));
+
+render();
+</script>
+</body>
+</html>
